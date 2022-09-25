@@ -1,0 +1,28 @@
+name: Deploy CloudFormation Stack with Sagemaker model endpoint
+
+on:
+
+  workflow_dispatch:
+
+jobs:
+  deployStack:
+    name: Setup and deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{secrets.AWS_REGION}}
+
+    - name: Deploy CloudFormation Stack
+      env: # Include CloudFormation parameters as environment variables
+        STACK_NAME: ${{ secrets.STACK_NAME }}
+        EXECUTION_ROLE_ARN: ${{ secrets.EXECUTION_ROLE_ARN }}
+        IMAGE: ${{ secrets.IMAGE}}
+        MODEL_DATA_URL: ${{ secrets.MODEL_DATA_URL}}
+      run: aws cloudformation deploy --stack-name "$STACK_NAME" --parameter-override ExecutionRoleArnParameter="$EXECUTION_ROLE_ARN" ImageParameter="$IMAGE" ModelDataUrlParameter="$MODEL_DATA_URL" --template-file stack.yml

@@ -1,0 +1,47 @@
+Parameters:
+  ExecutionRoleArnParameter:
+    Type: String
+    Default: arn
+    Description: Insert ExecutionRoleArn
+  ImageParameter:
+    Type: String
+    Default: image
+    Description: Insert Image
+  ModelDataUrlParameter:
+    Type: String
+    Default: model
+    Description: Insert ModelDataUrl
+
+
+Description: "Sagemaker model and API endpoint"
+Resources:
+  Endpoint:
+    Type: "AWS::SageMaker::Endpoint"
+    Properties:
+      EndpointConfigName:
+        !GetAtt EndpointConfig.EndpointConfigName
+  EndpointConfig:
+    Type: "AWS::SageMaker::EndpointConfig"
+    Properties:
+      ProductionVariants:
+        - InitialInstanceCount: 1
+          InitialVariantWeight: 1.0
+          InstanceType: ml.t2.large
+          ModelName: !GetAtt Model.ModelName
+          VariantName: !GetAtt Model.ModelName
+  Model:
+    Type: "AWS::SageMaker::Model"
+    Properties:
+      PrimaryContainer:
+        Image: 
+          Ref: ImageParameter
+        ModelDataUrl: 
+          Ref: ModelDataUrlParameter
+      ExecutionRoleArn:
+        Ref: ExecutionRoleArnParameter
+
+Outputs:
+  EndpointId:
+    Value: !Ref Endpoint
+  EndpointName:
+    Value: !GetAtt Endpoint.EndpointName
