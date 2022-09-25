@@ -1,5 +1,5 @@
 # Sagemaker Endpoint CloudFormation Demo
-This is a simple example of using GitHub Actions and AWS CloudFormation to deploy a pre-trained AWS Sagemaker model as an API endpoint.
+This is a simple example of using GitHub Actions and AWS CloudFormation to deploy a pre-trained AWS Sagemaker model as an API endpoint. The GitHub Actions workflow uses the marketplace action `aws-actions/configure-aws-credentials` to authenticate to AWS and uses the AWS CLI to deploy the CloudFormation template. The CloudFormation template is based on [an example from the AWS documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-model.html), altered to use different parameters and to work with a built-in Sagemaker model.
 
 ## Training a Model
 
@@ -10,8 +10,6 @@ The model for this demo is an `xgboost` model trained using a Sagemaker Jumpstar
 Note: This project requires an AWS account. Some of this does *not* use the free tier, so beware! 
 
 You will need an AWS account and a Sagemaker domain. 
-
-![Sagemaker Domain](/raw=true)
 
 You will also need IAM permissions set up properly. One simple way (which is OK for a demo but should be replaced by an OIDC integration in the enterprise) is to create a *new* IAM user (*not* the root user of the account!) with the appropriate IAM policies attached, and use GitHub Actions Secrets to store AWS access and secret keys. *NEVER PUT YOUR AWS SECRET AND ACCESS KEYS IN YOUR CODE OR ON GITHUB* 
 
